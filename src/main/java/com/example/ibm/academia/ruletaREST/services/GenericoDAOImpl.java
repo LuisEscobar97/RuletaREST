@@ -5,7 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-@Service
+
+
 public class GenericoDAOImpl <E,R extends CrudRepository<E,Integer>> implements  GenericoDAO<E> {
 
     protected final R repository;

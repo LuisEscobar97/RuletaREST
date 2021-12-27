@@ -5,6 +5,7 @@ import com.example.ibm.academia.ruletaREST.entities.Ruleta;
 import com.example.ibm.academia.ruletaREST.exceptions.BadRequestException;
 import com.example.ibm.academia.ruletaREST.exceptions.NotFoundException;
 import com.example.ibm.academia.ruletaREST.respositories.ApuestaRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class ApuestaDAOImpl extends GenericoDAOImpl<Apuesta, ApuestaRepository> 
                 }else{
                     throw new BadRequestException("Aapuesta invalida");
                 }
-                apuesta.setResultado(String.valueOf(numeroAleatorio));
+                apuesta.setApuestaRealizda(colorAouesta.toUpperCase());
                 apuesta=repository.save(apuesta);
             }else{
                 throw new BadRequestException("Apuesta invalida");

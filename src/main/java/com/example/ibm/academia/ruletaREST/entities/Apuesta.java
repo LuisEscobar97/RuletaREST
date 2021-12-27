@@ -24,7 +24,7 @@ public class Apuesta implements Serializable {
     private Integer id;
 
     @Column(name = "dinero",nullable = false)
-    @Positive(message = "no puede ser negativo")
+    @Positive(message = "dinero no puede ser negativo")
     private Double dinero;
 
     @Column(name = "apuesta_realizada",nullable = false)
@@ -38,7 +38,6 @@ public class Apuesta implements Serializable {
     private String resultado;
 
     @Column(name = "estado",nullable = false)
-    @Positive(message = "no puede ser negativo")
     private Integer estado;
 
     @ManyToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)

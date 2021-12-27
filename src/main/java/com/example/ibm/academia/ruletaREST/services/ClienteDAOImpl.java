@@ -2,6 +2,7 @@ package com.example.ibm.academia.ruletaREST.services;
 
 import com.example.ibm.academia.ruletaREST.entities.Cliente;
 import com.example.ibm.academia.ruletaREST.respositories.ClienteRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -9,7 +10,7 @@ import java.util.Optional;
 public class ClienteDAOImpl extends GenericoDAOImpl<Cliente, ClienteRepository> implements ClienteDAO {
 
 
-    public ClienteDAOImpl(ClienteRepository repository) {
+    public ClienteDAOImpl(@Qualifier("respositorioClientes")ClienteRepository repository) {
         super(repository);
     }
 

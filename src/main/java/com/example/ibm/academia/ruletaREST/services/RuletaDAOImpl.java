@@ -4,6 +4,7 @@ import com.example.ibm.academia.ruletaREST.entities.Ruleta;
 import com.example.ibm.academia.ruletaREST.exceptions.BadRequestException;
 import com.example.ibm.academia.ruletaREST.exceptions.NotFoundException;
 import com.example.ibm.academia.ruletaREST.respositories.RuletaRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.Optional;
 public class RuletaDAOImpl extends GenericoDAOImpl<Ruleta, RuletaRepository> implements RuletaDAO{
 
 
-    public RuletaDAOImpl(RuletaRepository repository) {
+    public RuletaDAOImpl(@Qualifier("respositorioRuletas")RuletaRepository repository) {
         super(repository);
     }
 

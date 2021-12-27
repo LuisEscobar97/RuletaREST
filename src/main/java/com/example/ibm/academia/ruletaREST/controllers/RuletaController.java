@@ -101,7 +101,7 @@ public class RuletaController {
      * @param apuesta la opcion elegida para apostar
      * @return la apuesta creada
      */
-    @PostMapping("/apuesta")
+    @GetMapping("/apuesta")
     @ApiOperation("Apostar en una ruleta")
     @ApiResponses({
             @ApiResponse(code = 201,message = "Created"),
@@ -129,7 +129,7 @@ public class RuletaController {
      * @param ruletaId el id de la ruleta que se va cerrra
      * @return listado de todas las apuesta realizadas en la ruleta selecionada
      */
-    @PostMapping("/apuesta")
+    @PostMapping("/cerrar")
     @ApiOperation("Apostar en una ruleta")
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK"),
