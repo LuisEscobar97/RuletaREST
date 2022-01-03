@@ -1,6 +1,7 @@
 package com.example.ibm.academia.ruletaREST.controllers;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
+import com.example.ibm.academia.ruletaREST.dto.ApuestaDTO;
 import com.example.ibm.academia.ruletaREST.entities.Apuesta;
 import com.example.ibm.academia.ruletaREST.entities.Ruleta;
 import com.example.ibm.academia.ruletaREST.exceptions.NotFoundException;
@@ -141,9 +142,9 @@ public class RuletaController {
         Map<String, Object> respuesta = new HashMap<String, Object>();
         try {
              ruletaCerrada= ruletaDAO.buscarPorID(ruletaId).get();
-             List<Apuesta> apuestas= (List<Apuesta>) apuestaDAO.obtenerApuestaDeRuleta(ruletaId);
+             List<ApuestaDTO> apuestas= (List<ApuestaDTO>) apuestaDAO.obtenerApuestaDeRuleta(ruletaId);
 
-             return new ResponseEntity<List<Apuesta>>(apuestas,HttpStatus.OK);
+             return new ResponseEntity<List<ApuestaDTO>>(apuestas,HttpStatus.OK);
         }catch (Exception e){
             logger.info(e.getMessage());
             respuesta.put("Error","operacion no completada con exito");

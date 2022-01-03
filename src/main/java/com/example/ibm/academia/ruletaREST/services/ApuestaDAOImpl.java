@@ -1,15 +1,19 @@
 package com.example.ibm.academia.ruletaREST.services;
 
+import com.example.ibm.academia.ruletaREST.dto.ApuestaDTO;
 import com.example.ibm.academia.ruletaREST.entities.Apuesta;
 import com.example.ibm.academia.ruletaREST.entities.Ruleta;
 import com.example.ibm.academia.ruletaREST.exceptions.BadRequestException;
 import com.example.ibm.academia.ruletaREST.exceptions.NotFoundException;
+import com.example.ibm.academia.ruletaREST.mapper.ApuestaMapper;
 import com.example.ibm.academia.ruletaREST.respositories.ApuestaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class ApuestaDAOImpl extends GenericoDAOImpl<Apuesta, ApuestaRepository> implements ApuestaDAO {
@@ -18,13 +22,18 @@ public class ApuestaDAOImpl extends GenericoDAOImpl<Apuesta, ApuestaRepository> 
     }
 
     @Override
-    public Iterable<Apuesta> obtenerApuestaDeRuleta(Integer ruletaId) {
+    public List<ApuestaDTO> obtenerApuestaDeRuleta(Integer ruletaId) {
+        List<ApuestaDTO> listaApuestas= new ArrayList<>();
+        List<Apuesta> apuestasruleta= (List<Apuesta>) repository.obtenerApuestaDeRuleta(ruletaId);
 
-        Iterable<Apuesta> apuestasruleta= repository.obtenerApuestaDeRuleta(ruletaId);
-            if (((List<Apuesta>)apuestasruleta).isEmpty())
+            if (apuestasruleta.isEmpty())
                 throw new NotFoundException("No hay apuestas realizadas para la ruleta seleccionada");
 
-        return apuestasruleta;
+        listaApuestas=apuestasruleta.stream()
+                .map(ApuestaMapper::mapApuesta)
+                .collect(Collectors.toList());
+
+        return listaApuestas;
     }
 
     @Override
