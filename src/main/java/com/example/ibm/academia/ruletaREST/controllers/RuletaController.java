@@ -1,7 +1,9 @@
 package com.example.ibm.academia.ruletaREST.controllers;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import com.example.ibm.academia.ruletaREST.entities.Apuesta;
 import com.example.ibm.academia.ruletaREST.entities.Ruleta;
+import com.example.ibm.academia.ruletaREST.exceptions.NotFoundException;
 import com.example.ibm.academia.ruletaREST.services.ApuestaDAO;
 import com.example.ibm.academia.ruletaREST.services.RuletaDAO;
 import io.swagger.annotations.Api;
@@ -140,6 +142,7 @@ public class RuletaController {
         try {
              ruletaCerrada= ruletaDAO.buscarPorID(ruletaId).get();
              List<Apuesta> apuestas= (List<Apuesta>) apuestaDAO.obtenerApuestaDeRuleta(ruletaId);
+
              return new ResponseEntity<List<Apuesta>>(apuestas,HttpStatus.OK);
         }catch (Exception e){
             logger.info(e.getMessage());
@@ -147,4 +150,31 @@ public class RuletaController {
         }
         return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * end point creado con la finalidad de obtener todas la ruletas dadas de alta sin importar su estado
+     * @return lista de ruletas dadas de alta en la base de datos
+     */
+    @PostMapping("/listar")
+    @ApiOperation("obtener todas la ruletas dadas de alta")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")}
+    )public ResponseEntity<?>bucarTodasRuletas(){
+        List<Ruleta> ruletas= null;
+        Map<String, Object> respuesta = new HashMap<String, Object>();
+        try {
+            ruletas= ruletaDAO.buscarTodosRuletas();
+            return new ResponseEntity<List<Ruleta>>(ruletas,HttpStatus.OK);
+        }catch (NotFoundException e){
+            logger.info(e.getMessage());
+            respuesta.put("Error","No hay  ruletas dadas de alta en la base de datos");
+        }catch (Exception e ){
+            logger.info(e.getMessage());
+            respuesta.put("Error","operacion no completada con exito");
+        }
+        return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.NOT_FOUND);
+    }
+
+
 }

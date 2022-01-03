@@ -1,12 +1,15 @@
 package com.example.ibm.academia.ruletaREST.services;
 
+import com.example.ibm.academia.ruletaREST.entities.Apuesta;
 import com.example.ibm.academia.ruletaREST.entities.Ruleta;
 import com.example.ibm.academia.ruletaREST.exceptions.BadRequestException;
 import com.example.ibm.academia.ruletaREST.exceptions.NotFoundException;
 import com.example.ibm.academia.ruletaREST.respositories.RuletaRepository;
+import org.dom4j.rule.Rule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,24 +29,24 @@ public class RuletaDAOImpl extends GenericoDAOImpl<Ruleta, RuletaRepository> imp
             throw new BadRequestException("La ruleta seleccionada ya fue cerrada y no se puede dar apuertura de nuevo");
         else{
         ruletaAbierta.setEstado(1);
-        ruletaAbierta=repository.save(ruletaAbierta);
+            return repository.save(ruletaAbierta);
         }
-        return ruletaAbierta;
+
     }
 
     @Override
     public Ruleta cierreRuleta(Ruleta ruleta) {
 
-
         Ruleta ruletaAbierta=ruleta;
 
-        if (ruletaAbierta.getEstado()!=1 ||ruletaAbierta.getEstado()!=0)
-            throw new BadRequestException("La ruleta seleccionada no ha sido abierta aun y no se puede cerrar");
-        else{
+        if (ruletaAbierta.getEstado()==1) {
             ruletaAbierta.setEstado(0);
-            ruletaAbierta=repository.save(ruletaAbierta);
-        }
-        return ruletaAbierta;
+            return repository.save(ruletaAbierta);
+        }else if(ruletaAbierta.getEstado()==0)
+            throw new BadRequestException("La ruleta seleccionada ya ha sido cerrada");
+        else
+            throw new BadRequestException("La ruleta seleccionada no se puede cerrar ya que aun no ha sido abierta");
+
     }
 
     @Override
@@ -53,4 +56,15 @@ public class RuletaDAOImpl extends GenericoDAOImpl<Ruleta, RuletaRepository> imp
 
         return ruletaGudarda.getId();
     }
+
+    @Override
+    public List<Ruleta> buscarTodosRuletas() {
+    List<Ruleta> ruletas =(List<Ruleta>)repository.findAll();
+    if (ruletas.isEmpty())
+        throw new NotFoundException("No hay suletas dadas de alta en la base de datos");
+
+        return ruletas ;
+    }
+
+
 }

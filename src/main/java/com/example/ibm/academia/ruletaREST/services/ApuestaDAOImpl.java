@@ -35,11 +35,11 @@ public class ApuestaDAOImpl extends GenericoDAOImpl<Apuesta, ApuestaRepository> 
         Integer nuneroApuesta=0;
         String colorAouesta="";
 
-        if (ruleta.getEstado()==0)
-            throw new BadRequestException("La suleta seleccionada no puede ser utilizada ya que esta cerrada");
+        if (ruleta.getEstado()!=1)
+            throw new BadRequestException("La suleta seleccionada no puede ser utilizada ya que esta cerrada o no ha sido abierta");
 
-        if (dineroApuesta<=0)
-            throw new BadRequestException("La apuesta tiene que ser un valor mayor a 0");
+        if (dineroApuesta<=0||dineroApuesta>10000)
+            throw new BadRequestException("La apuesta tiene que ser un valor mayor a 0 o menor a 10000");
 
         Apuesta apuesta= new Apuesta();
         apuesta.setDinero(dineroApuesta);
@@ -49,26 +49,43 @@ public class ApuestaDAOImpl extends GenericoDAOImpl<Apuesta, ApuestaRepository> 
             if (tipoApuesta==1){
                 numeroAleatorio=random.ints(0, 36).findFirst().getAsInt();
                 nuneroApuesta=Integer.parseInt(selccionApuesta);
-
-                    if (numeroAleatorio==nuneroApuesta){
-                         apuesta.setEstado(1);
-
-                    }else{
+                if (nuneroApuesta>=0||nuneroApuesta<=36) {
+                    if (numeroAleatorio == nuneroApuesta) {
+                        apuesta.setEstado(1);
+                    } else {
                         apuesta.setEstado(0);
                     }
+                }else
+                    throw new BadRequestException("Aapuesta invalida");
+
                 apuesta.setApuestaRealizda(selccionApuesta);
                 apuesta.setResultado(String.valueOf(numeroAleatorio));
                 apuesta=repository.save(apuesta);
+
             }else if(tipoApuesta==2){
-                numeroAleatorio=random.ints(1, 2).findFirst().getAsInt();
+                numeroAleatorio=random.ints(1, 3).findFirst().getAsInt();
                 colorAouesta=selccionApuesta;
 
-                if (numeroAleatorio==1&& colorAouesta.toUpperCase().equals("ROJO")){
-                    apuesta.setResultado("ROJO");
-                    apuesta.setEstado(1);
-                }else if(numeroAleatorio==2&& colorAouesta.toUpperCase().equals("NEGRO")){
-                    apuesta.setResultado("NEGRO");
-                    apuesta.setEstado(0);
+                if (numeroAleatorio==1){
+                    if(colorAouesta.toUpperCase().equals("ROJO")){
+                        apuesta.setEstado(1);
+                        apuesta.setResultado("ROJO");
+                    }else if (colorAouesta.toUpperCase().equals("NEGRO")){
+                        apuesta.setResultado("NEGRO");
+                        apuesta.setEstado(0);
+                    }else
+                        throw new BadRequestException("Aapuesta invalida");
+
+                }else if(numeroAleatorio==2){
+                    if (colorAouesta.toUpperCase().equals("NEGRO")){
+                        apuesta.setResultado("NEGRO");
+                        apuesta.setEstado(1);
+                    }else if (colorAouesta.toUpperCase().equals("ROJO")){
+                        apuesta.setResultado("ROJO");
+                        apuesta.setEstado(0);
+                    }else
+                        throw new BadRequestException("Aapuesta invalida");
+
                 }else{
                     throw new BadRequestException("Aapuesta invalida");
                 }
